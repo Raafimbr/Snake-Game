@@ -16,7 +16,7 @@ def recomecar():
     if not fim and not inicio and resetar:
         textoTempo = Label(janela, fg='black', bg='gray95', text=f'TIME: {0:02.0f}:{0:02.0f}:{0:02.0f}', font=('', 40))
         textoTempo.place(x=0, y=-5)
-        textoScore = Label(janela, fg='dodger blue', bg='gray95', text=f'SCORE: {0:03.0f}', font=('', 40))
+        textoScore = Label(janela, fg='DeepSkyBlue2', bg='gray95', text=f'SCORE: {0:03.0f}', font=('', 40))
         textoScore.place(x=larguraTela/2-160, y=-5)
         textoRecord = Label(janela, fg='black', bg='gray95', text=f'RECORDE: {record:03.0f}', font=('', 40))
         textoRecord.place(x=larguraTela-385, y=-5)
@@ -64,10 +64,7 @@ def jogo():
         global pausado
 
         if comecou:
-            if pausado:
-                pausado = False
-            else:
-                pausado = True
+            pausado = False if pausado == True else True
 
     def mostrarPG(pg):
         global txtPG
@@ -95,10 +92,6 @@ def jogo():
 
         while True:
             sleep(1)
-            if not fim:
-                break
-            elif pausado:
-                continue
             if not fim:
                 break
             elif pausado:
@@ -333,7 +326,7 @@ def inicial():
             janela.bind('n', lambda e: stopLoop(0, 'm'))
             janela.bind('a', lambda e: stopLoop(1, 'm'))
             janela.bind('l', lambda e: stopLoop(2, 'm'))
-        listD = [txtCor, txtG, txtR, txtY, txtB, txtVelocidade, txtN, txtM, txtA, txtRr, txtL]
+        listD = [txtCor, txtG, txtR, txtY, txtB, txtVelocidade, txtN, txtM, txtA, txtRr, txtL, txtPi]
         break
     for x in listD:
         x.destroy()
