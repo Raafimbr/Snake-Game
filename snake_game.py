@@ -215,6 +215,7 @@ def verificarPerda():
                 posicaoPlayerXY[1] += ponteiro[0]
                 break
             if modoJogo != 'livre':
+                i[0]['bg'] = 'orange'
                 return True
     else:
         return False
