@@ -18,7 +18,7 @@ def recomecar():
         textoTempo.place(x=0, y=-5)
         textoScore = Label(janela, fg='DeepSkyBlue2', bg='gray95', text=f'SCORE: {0:03.0f}', font=('', 40))
         textoScore.place(x=larguraTela/2-160, y=-5)
-        textoRecord = Label(janela, fg='black', bg='gray95', text=f'RECORDE: {record:03.0f}', font=('', 40))
+        textoRecord = Label(janela, fg='black', bg='gray95', text=f'RECORD: {record:03.0f}', font=('', 40))
         textoRecord.place(x=larguraTela-385, y=-5)
         fundo = Label(janela, bg=corFundo)
         fundo.place(x=0, y=50, height=alturaTela, width=larguraTela)
@@ -48,14 +48,19 @@ def recomecar():
             posicoesSnake.append([quadradoVerde, 802-a*50, 452])
         posicaoPlayerXY = [posicoesSnake[len(posicoesSnake)-1][1], posicoesSnake[len(posicoesSnake)-1][2]]
         criarMaca()
-        janela.bind('w', lambda e: mudarPosicao([-50, 1], 'w'))      # Cima
-    janela.bind('<Up>', lambda e: mudarPosicao([-50, 1], 'w'))   # Cima
-    janela.bind('s', lambda e: mudarPosicao([50, 1], 's'))       # Baixo
-    janela.bind('<Down>', lambda e: mudarPosicao([50, 1], 's'))  # Baixo
-    janela.bind('d', lambda e: mudarPosicao([50, 0], 'd'))       # Direita
-    janela.bind('<Right>', lambda e: mudarPosicao([50, 0], 'd')) # Direita
-    janela.bind('a', lambda e: mudarPosicao([-50, 0], 'a'))      # Esquerda
-    janela.bind('<Left>', lambda e: mudarPosicao([-50, 0], 'a')) # Esquerda
+
+    janela.bind('w', lambda e: mudarPosicao([-50, 1], 'w'))
+    janela.bind('W', lambda e: mudarPosicao([-50, 1], 'w'))
+    janela.bind('<Up>', lambda e: mudarPosicao([-50, 1], 'w'))
+    janela.bind('s', lambda e: mudarPosicao([50, 1], 's'))
+    janela.bind('S', lambda e: mudarPosicao([50, 1], 's'))
+    janela.bind('<Down>', lambda e: mudarPosicao([50, 1], 's'))
+    janela.bind('d', lambda e: mudarPosicao([50, 0], 'd'))
+    janela.bind('D', lambda e: mudarPosicao([50, 0], 'd'))
+    janela.bind('<Right>', lambda e: mudarPosicao([50, 0], 'd'))
+    janela.bind('a', lambda e: mudarPosicao([-50, 0], 'a'))
+    janela.bind('A', lambda e: mudarPosicao([-50, 0], 'a'))
+    janela.bind('<Left>', lambda e: mudarPosicao([-50, 0], 'a'))
 
 def jogo():
     global score, tirarUltimo, textoScore, fim, horas, minutos, segundos, loopTempo, thread3, resetar, record
@@ -70,10 +75,10 @@ def jogo():
         global txtPG
 
         if pg == 'g':
-            txtPG = Label(janela, text='VOCÊ GANHOU!', bg=corFundo, fg='green3', font=('Impact', 50))
+            txtPG = Label(janela, text='YOU WON!', bg=corFundo, fg='green3', font=('Impact', 50))
         else:
-            txtPG = Label(janela, text='VOCÊ PERDEU!', bg=corFundo, fg='red', font=('Impact', 50))
-        txtPG.place(x=larguraTela/2-183, y=alturaTela/2-25)
+            txtPG = Label(janela, text='YOU LOST!', bg=corFundo, fg='red', font=('Impact', 50))
+        txtPG.place(x=larguraTela/2-140, y=alturaTela/2-25)
         txtPress = Label(janela, text='PRESS      TO RESTART', bg=corFundo, fg='white', font=('Impact', 30))
         txtRPress = Label(janela, text='R', bg=corFundo, fg='brown4', font=('Impact', 30))
         if resetar == True:
@@ -107,6 +112,7 @@ def jogo():
 
 
     janela.bind('p', lambda e: pausar())
+    janela.bind('P', lambda e: pausar())
     while fim:
         if not loopTempo:
             horas = 0
@@ -120,6 +126,7 @@ def jogo():
         if score+3 == (int((larguraTela-50)/50)*(int((alturaTela-50)/50))):
             fim = False
             janela.bind('r', lambda e: recomecar()) # Recomecar
+            janela.bind('R', lambda e: recomecar()) # Recomecar
             mostrarPG('g')
             sleep(1.1)
             resetar = True
@@ -135,6 +142,7 @@ def jogo():
         if verificarPerda():
             fim = False
             janela.bind('r', lambda e: recomecar()) # Recomecar
+            janela.bind('R', lambda e: recomecar()) # Recomecar
             mostrarPG('p')
             sleep(1.1)
             resetar = True
@@ -151,7 +159,7 @@ def jogo():
             criarMaca()
             record = score if score > record else record
             textoScore['text'] = f'SCORE: {score:03.0f}'
-            textoRecord['text'] = f'RECORDE: {record:03.0f}'
+            textoRecord['text'] = f'RECORD: {record:03.0f}'
 
         quadradoVerde.place(x=posicaoPlayerXY[0], y=posicaoPlayerXY[1], height=48, width=48)
         posicoesSnake.append([quadradoVerde, posicaoPlayerXY[0], posicaoPlayerXY[1]])
@@ -198,12 +206,18 @@ def verificarPerda():
     for i in posicoesSnake:
         if [i[1], i[2]] == posicaoPlayerXY:
             if posicoesSnake[-2][1:] == posicaoPlayerXY and ponteiro[1] == 0:
-                direcaoImg = PhotoImage(file='snakeDireita.png') if ponteiro[0] == -50 else PhotoImage(file='snakeEsquerda.png')
+                try:
+                    direcaoImg = PhotoImage(file='snake_game/snakeDireita.png') if ponteiro[0] == -50 else PhotoImage(file='snake_game/snakeEsquerda.png')
+                except:
+                    direcaoImg = PhotoImage(file='snakeDireita.png') if ponteiro[0] == -50 else PhotoImage(file='snakeEsquerda.png')
                 ponteiro[0] *= -1
                 posicaoPlayerXY[0] += ponteiro[0]
                 break
             elif posicoesSnake[-2][1:] == posicaoPlayerXY and ponteiro[1] == 1:
-                direcaoImg = PhotoImage(file='snakeBaixo.png') if ponteiro[0] == -50 else PhotoImage(file='snakeCima.png')
+                try:
+                    direcaoImg = PhotoImage(file='snake_game/snakeBaixo.png') if ponteiro[0] == -50 else PhotoImage(file='snake_game/snakeCima.png')
+                except:
+                    direcaoImg = PhotoImage(file='snakeBaixo.png') if ponteiro[0] == -50 else PhotoImage(file='snakeCima.png')
                 ponteiro[0] *= -1
                 posicaoPlayerXY[1] += ponteiro[0]
                 break
@@ -220,13 +234,25 @@ def mudarPosicao(lista, tecla):
         global direcaoImg
 
         if tecla == 'w':
-            direcaoImg = PhotoImage(file='snakeCima.png')
+            try:
+                direcaoImg = PhotoImage(file='snake_game/snakeCima.png')
+            except:
+                direcaoImg = PhotoImage(file='snakeCima.png')
         elif tecla == 's':
-            direcaoImg = PhotoImage(file='snakeBaixo.png')
+            try:
+                direcaoImg = PhotoImage(file='snake_game/snakeBaixo.png')
+            except:
+                direcaoImg = PhotoImage(file='snakeBaixo.png')
         elif tecla == 'd':
-            direcaoImg = PhotoImage(file='snakeDireita.png')
-        elif tecla == 'a':
-            direcaoImg = PhotoImage(file='snakeEsquerda.png')
+            try:
+                direcaoImg = PhotoImage(file='snake_game/snakeDireita.png')
+            except:
+                direcaoImg = PhotoImage(file='snakeDireita.png')
+        else:
+            try:
+                direcaoImg = PhotoImage(file='snake_game/snakeEsquerda.png')
+            except:
+                direcaoImg = PhotoImage(file='snakeEsquerda.png')
 
     if tecla == 'a' and not comecou:
         return
@@ -276,8 +302,8 @@ def inicial():
     loop = True
     while True:
         # Cor
-        txtCor = Label(janela, text='QUAL COR DA SNAKE QUER?', bg=corFundo, fg='white', font=('Impact', 30))
-        txtCor.place(x=larguraTela/2-235, y=alturaTela/2-350)
+        txtCor = Label(janela, text='WHAT COLOR SNAKE DO YOU WANT?', bg=corFundo, fg='white', font=('Impact', 30))
+        txtCor.place(x=larguraTela/2-300, y=alturaTela/2-350)
         txtG = Label(janela, text='G', bg=corFundo, fg='green2', font=('Impact', 30))
         txtG.place(x=larguraTela/2-255, y=alturaTela/2-250)
         txtR = Label(janela, text='R', bg=corFundo, fg='red', font=('Impact', 30))
@@ -291,41 +317,52 @@ def inicial():
         infoR = [[txtG, 'green2',], [txtR, 'red'], [txtY, 'yellow'], [txtB, 'blue'], [txtPi, 'deep pink']]
         while loop:
             janela.bind('g', lambda e: stopLoop(0, 'c'))
+            janela.bind('G', lambda e: stopLoop(0, 'c'))
             janela.bind('r', lambda e: stopLoop(1, 'c'))
+            janela.bind('R', lambda e: stopLoop(1, 'c'))
             janela.bind('y', lambda e: stopLoop(2, 'c'))
+            janela.bind('Y', lambda e: stopLoop(2, 'c'))
             janela.bind('b', lambda e: stopLoop(3, 'c'))
+            janela.bind('B', lambda e: stopLoop(3, 'c'))
             janela.bind('p', lambda e: stopLoop(4, 'c'))
+            janela.bind('P', lambda e: stopLoop(4, 'c'))
             sleep(0.09)
         loop = True
         # Velocidade
-        txtVelocidade = Label(janela, text='QUAL VELOCIDADE QUER?', bg=corFundo, fg='white', font=('Impact', 30))
-        txtVelocidade.place(x=larguraTela/2-225, y=alturaTela/2-170)
+        txtVelocidade = Label(janela, text='WHAT SPEED DO YOU WANT?', bg=corFundo, fg='white', font=('Impact', 30))
+        txtVelocidade.place(x=larguraTela/2-250, y=alturaTela/2-170)
         txtN = Label(janela, text='N - NORMAL', bg=corFundo, fg='gold', font=('Impact', 30))
         txtN.place(x=larguraTela/2-130, y=alturaTela/2-70)
-        txtM = Label(janela, text='M - MÉDIA', bg=corFundo, fg='orange', font=('Impact', 30))
+        txtM = Label(janela, text='A - AVERAGE', bg=corFundo, fg='orange', font=('Impact', 30))
         txtM.place(x=larguraTela/2-130, y=alturaTela/2-20)
-        txtRr = Label(janela, text='R - RÁPIDA', bg=corFundo, fg='red3', font=('Impact', 30))
+        txtRr = Label(janela, text='Q - QUICK', bg=corFundo, fg='red3', font=('Impact', 30))
         txtRr.place(x=larguraTela/2-130, y=alturaTela/2+30)
         infoR = [[txtN, 0.09], [txtM, 0.07], [txtRr, 0.05]]
         while loop:
             janela.bind('n', lambda e: stopLoop(0, 'v'))
-            janela.bind('m', lambda e: stopLoop(1, 'v'))
-            janela.bind('r', lambda e: stopLoop(2, 'v'))
+            janela.bind('N', lambda e: stopLoop(0, 'v'))
+            janela.bind('a', lambda e: stopLoop(1, 'v'))
+            janela.bind('A', lambda e: stopLoop(1, 'v'))
+            janela.bind('q', lambda e: stopLoop(2, 'v'))
+            janela.bind('Q', lambda e: stopLoop(2, 'v'))
         # Modo
         loop = True
-        txtM = Label(janela, text='QUAL MODO QUER?', bg=corFundo, fg='white', font=('Impact', 30))
-        txtM.place(x=larguraTela/2-178, y=alturaTela/2+35)
+        txtM = Label(janela, text='WHICH MODE DO YOU WANT?', bg=corFundo, fg='white', font=('Impact', 30))
+        txtM.place(x=larguraTela/2-230, y=alturaTela/2+35)
         txtN = Label(janela, text='N - NORMAL', bg=corFundo, fg='lawn green', font=('Impact', 30))
         txtN.place(x=larguraTela/2-130, y=alturaTela/2+135)
-        txtA = Label(janela, text='A - ATRAVESSAR PAREDES', bg=corFundo, fg='DeepSkyBlue2', font=('Impact', 30))
+        txtA = Label(janela, text='W - WALK THROUGH WALLS', bg=corFundo, fg='DeepSkyBlue2', font=('Impact', 30))
         txtA.place(x=larguraTela/2-130, y=alturaTela/2+185)
-        txtL = Label(janela, text='L - LIVRE', bg=corFundo, fg='cyan', font=('Impact', 30))
+        txtL = Label(janela, text='F - FREE', bg=corFundo, fg='cyan', font=('Impact', 30))
         txtL.place(x=larguraTela/2-130, y=alturaTela/2+235)
         infoR = [[txtN, 'normal'], [txtA, 'atravessar'], [txtL, 'livre']]
         while loop:
             janela.bind('n', lambda e: stopLoop(0, 'm'))
-            janela.bind('a', lambda e: stopLoop(1, 'm'))
-            janela.bind('l', lambda e: stopLoop(2, 'm'))
+            janela.bind('N', lambda e: stopLoop(0, 'm'))
+            janela.bind('w', lambda e: stopLoop(1, 'm'))
+            janela.bind('W', lambda e: stopLoop(1, 'm'))
+            janela.bind('f', lambda e: stopLoop(2, 'm'))
+            janela.bind('F', lambda e: stopLoop(2, 'm'))
         listD = [txtCor, txtG, txtR, txtY, txtB, txtVelocidade, txtN, txtM, txtA, txtRr, txtL, txtPi]
         break
     for x in listD:
@@ -338,7 +375,7 @@ def inicial():
     txtCPress.place(x=larguraTela/2-54, y=(alturaTela/2)+(alturaTela/2)/2)
     # pause
     txtP = Label(janela, text='P', bg=corFundo, fg='orange', font=('Impact', 50))
-    txtPause = Label(janela, text='- PAUSAR', bg=corFundo, fg='white', font=('Impact', 50))
+    txtPause = Label(janela, text='- PAUSE', bg=corFundo, fg='white', font=('Impact', 50))
     txtPause.place(x=larguraTela/2-162, y=alturaTela/2-150)
     txtP.place(x=larguraTela/2-200, y=alturaTela/2-150)
     # restart
@@ -348,7 +385,7 @@ def inicial():
     txtR.place(x=larguraTela/2-200, y=alturaTela/2-62)
     # sair
     txtESC = Label(janela, text='ESC', bg=corFundo, fg='red', font=('Impact', 50))
-    txtSair = Label(janela, text='- SAIR', bg=corFundo, fg='white', font=('Impact', 50))
+    txtSair = Label(janela, text='- LEAVE', bg=corFundo, fg='white', font=('Impact', 50))
     txtSair.place(x=larguraTela/2-162, y=alturaTela/2+26)
     txtESC.place(x=larguraTela/2-265, y=alturaTela/2+26)
 
@@ -365,9 +402,9 @@ def inicial():
             txtESC.destroy()
             fundo.destroy()
             recomecar()
-            cls()
 
     janela.bind('c', lambda e: comecar())
+    janela.bind('C', lambda e: comecar())
     janela.bind('<Escape>', lambda e: janela.destroy())
     while True:
         sleep(0.5)
@@ -378,6 +415,7 @@ def inicial():
             break
 
 
+cls()
 janela = Tk()
 alturaTela, larguraTela = int(janela.winfo_screenheight()), int(janela.winfo_screenwidth())
 janela.geometry(f'{larguraTela}x{alturaTela}+-10+-35')
@@ -389,8 +427,10 @@ inicio = True
 resetar = True
 record = 0
 corFundo = 'gray7'
-imgMaca = PhotoImage(file='maca.png')
-direcaoImg = ''
+try:
+    imgMaca = PhotoImage(file='snake_game/maca.png')
+except:
+    imgMaca = PhotoImage(file='maca.png')
 thread2 = threading.Thread(target=inicial)
 thread2.daemon = True
 thread2.start()
